@@ -1,0 +1,22 @@
+{
+  "name": "pylint",
+  "version": "0.0.1",
+  "description": "PyLint task for VSTS",
+  "main": "pylinttask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pylint",
+    "vsts"
+  ],
+  "author": "Darren Fuller",
+  "license": "MIT",
+  "dependencies": {
+    "vsts-task-lib": "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.22",
+    "@types/q": "^1.0.0"
+  }
+}
