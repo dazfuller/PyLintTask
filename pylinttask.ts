@@ -9,9 +9,9 @@ async function run() {
     // Execute PyLint
     let virtualEnv = process.env["VIRTUAL_ENV"];
     if (virtualEnv == undefined) {
-        let pythonPath = tl.which('python');
-        let tool = tl.tool(pythonPath).arg(['-m', 'venv', './venv/build'])
-        await tool.exec();
+        let pythonPath = tl.which('python3');
+        let venvTool = tl.tool(pythonPath).arg(['-m', 'venv', './venv/build'])
+        await venvTool.exec();
     } else {
         console.log('Already in a virtual environment')
     }
