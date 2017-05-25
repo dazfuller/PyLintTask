@@ -21,11 +21,19 @@
   "inputs": [
     {
       "name": "cwd",
-      "type": "filePath",
       "label": "Working Directory",
-      "defaultValue": "",
-      "required": false,
+      "type": "filePath",
+      "defaultValue": "~/Projects/python/testing",
+      "required": true,
       "helpMarkDown": "Current working directory when PyLint is run."
+    },
+    {
+      "name": "modules",
+      "label": "Modules",
+      "type": "string",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "A space seperate list of modules to run PyLint against"
     }
   ],
   "execution": {
