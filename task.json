@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "1",
-    "Patch": "0"
+    "Patch": "4"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "PyLint $(cwd)",
@@ -23,7 +23,7 @@
       "name": "cwd",
       "label": "Working Directory",
       "type": "filePath",
-      "defaultValue": "~/Projects/python/testing",
+      "defaultValue": "$(Agent.BuildDirectory)",
       "required": true,
       "helpMarkDown": "Current working directory when PyLint is run."
     },
