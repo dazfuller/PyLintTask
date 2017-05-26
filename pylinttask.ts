@@ -17,7 +17,13 @@ async function run() {
 
         // Create the virtual environment
         tl.debug('Creating virtual environment');
-        let venvTool = tl.tool(tl.which('python3')).arg(['-m', 'venv', venv]);
+        var pythonPath: string;
+        if (tl.osType().match(/^Win/)) {
+            pythonPath = tl.which('python');
+        } else {
+            pythonPath = tl.which('python3');
+        }
+        let venvTool = tl.tool(pythonPath).arg(['-m', 'venv', venv]);
         await venvTool.exec();
 
         // Activate the virtual environment
@@ -38,6 +44,7 @@ async function run() {
 
     // Execute PyLint
     tl.debug('Executing PyLint against modules: ' + modules);
+    console.log('Executing PyLint');
     let pyLintTool = tl.tool(tl.which('pylint')).arg(modules);
     await pyLintTool.exec();
 }
