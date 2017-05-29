@@ -18,7 +18,7 @@ async function activateVenv(venvPath: string, isWindows: boolean) {
 async function run() {
     // Get the working directory and move to it
     let cwd = tl.getPathInput('cwd', true, true);
-    tl.cd(cwd)
+    tl.cd(cwd);
 
     // Create the virtual environment and switch into it if not already in one
     if (process.env['VIRTUAL_ENV'] == undefined) {
