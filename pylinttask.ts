@@ -2,6 +2,19 @@ import tl = require('vsts-task-lib/task')
 import tr = require('vsts-task-lib/toolrunner')
 import path = require('path')
 
+async function activateVenv(venvPath: string, isWindows: boolean) {
+    tl.debug('Activating virtual environment')
+
+    if (isWindows) {
+        let activateToolPath = path.join(venvPath, 'bin', 'activate.bat');
+        let activateTool = tl.tool(activateToolPath);
+        await activateTool.exec();
+    } else {
+        process.env['VIRTUAL_ENV'] = venvPath;
+        process.env['PATH'] = path.join(venvPath, 'bin') + ':' + process.env['PATH'];
+    }
+}
+
 async function run() {
     // Get the working directory and move to it
     let cwd = tl.getPathInput('cwd', true, true);
@@ -11,6 +24,9 @@ async function run() {
     if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
+        // Determine if this is a windows based environment
+        let isWindows = tl.osType().match(/^Win/) != null;
+
         // Define the location of the virtual environment
         let venv = path.join(cwd, 'venv', 'build');
         tl.debug('Virtual environment path set to: ' + venv);
@@ -18,7 +34,7 @@ async function run() {
         // Create the virtual environment
         tl.debug('Creating virtual environment');
         var pythonPath: string;
-        if (tl.osType().match(/^Win/)) {
+        if (isWindows) {
             pythonPath = tl.which('python');
         } else {
             pythonPath = tl.which('python3');
@@ -27,9 +43,7 @@ async function run() {
         await venvTool.exec();
 
         // Activate the virtual environment
-        tl.debug('Activating virtual environment');
-        process.env['VIRTUAL_ENV'] = venv;
-        process.env['PATH'] = venv + '/bin:' + process.env['PATH'];
+        await activateVenv(venv, isWindows);
     } else {
         tl.debug('Already in a virtual environment');
     }
