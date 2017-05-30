@@ -2,17 +2,22 @@ import tl = require('vsts-task-lib/task')
 import tr = require('vsts-task-lib/toolrunner')
 import path = require('path')
 
-async function activateVenv(venvPath: string, isWindows: boolean) {
+function activateVenv(venvPath: string, isWindows: boolean) {
     tl.debug('Activating virtual environment')
 
+    var venvToolsPath: string;
+    var pathSeperator: string;
+
     if (isWindows) {
-        let activateToolPath = path.join(venvPath, 'bin', 'activate.bat');
-        let activateTool = tl.tool(activateToolPath);
-        await activateTool.exec();
+        venvToolsPath = 'Scripts';
+        pathSeperator = ';';
     } else {
-        process.env['VIRTUAL_ENV'] = venvPath;
-        process.env['PATH'] = path.join(venvPath, 'bin') + ':' + process.env['PATH'];
+        venvToolsPath = 'bin';
+        pathSeperator = ':';
     }
+
+    process.env['VIRTUAL_ENV'] = venvPath;
+    process.env['PATH'] = path.join(venvPath, venvToolsPath) + pathSeperator + process.env['PATH'];
 }
 
 async function run() {
@@ -43,7 +48,7 @@ async function run() {
         await venvTool.exec();
 
         // Activate the virtual environment
-        await activateVenv(venv, isWindows);
+        activateVenv(venv, isWindows);
     } else {
         tl.debug('Already in a virtual environment');
     }
