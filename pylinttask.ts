@@ -60,22 +60,21 @@ async function run() {
 
     // Get the collection of modules to check
     let modules = tl.getDelimitedInput('modules', ' ', true);
-    let lintArgs = ['-f', 'json'].concat(modules)
+    let lintArgs = ['-f', 'msvs'].concat(modules)
 
     // Execute PyLint
     tl.debug('Executing PyLint against modules: ' + modules);
     console.log('Executing PyLint');
-    let pyLintTool = tl.tool(tl.which('pylint')).arg(modules);
-    let lintResults = pyLintTool.execSync();
+    let pyLintTool = tl.tool(tl.which('pylint')).arg(lintArgs);
+    let pyLintToolOptions: tr.IExecSyncOptions = <any> {
+        silent: true
+    };
+    let lintResults = pyLintTool.execSync(pyLintToolOptions);
 
-    if (lintResults.code != tl.TaskResult.Succeeded) {
-        tl.warning('Failed to executing pylint: ' + lintResults)
-        tl.setResult(tl.TaskResult.Failed, 'Unable to execute PyLint')
-    } else if (lintResults.stdout == undefined) {
+    if (lintResults.stdout == undefined) {
         tl.setResult(tl.TaskResult.Succeeded, '');
     } else {
-        var results = JSON.parse(lintResults.stdout);
-        console.table(results);
+        console.log(lintResults.stdout);
         tl.setResult(tl.TaskResult.Failed, 'Failed PyLint checks');
     }
 }
