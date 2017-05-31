@@ -74,6 +74,8 @@ async function run() {
     } else if (lintResults.stdout == undefined) {
         tl.setResult(tl.TaskResult.Succeeded, '');
     } else {
+        var results = JSON.parse(lintResults.stdout);
+        console.table(results);
         tl.setResult(tl.TaskResult.Failed, 'Failed PyLint checks');
     }
 }
