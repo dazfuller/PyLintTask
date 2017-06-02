@@ -5,19 +5,10 @@ import path = require('path')
 function activateVenv(venvPath: string, isWindows: boolean) {
     tl.debug('Activating virtual environment')
 
-    var venvToolsPath: string;
-    var pathSeperator: string;
-
-    if (isWindows) {
-        venvToolsPath = 'Scripts';
-        pathSeperator = ';';
-    } else {
-        venvToolsPath = 'bin';
-        pathSeperator = ':';
-    }
+    let venvToolsPath = isWindows ? 'Scripts' : 'bin';
 
     process.env['VIRTUAL_ENV'] = venvPath;
-    process.env['PATH'] = path.join(venvPath, venvToolsPath) + pathSeperator + process.env['PATH'];
+    process.env['PATH'] = path.join(venvPath, venvToolsPath) + path.delimiter + process.env['PATH'];
 }
 
 async function run() {
