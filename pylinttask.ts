@@ -62,11 +62,11 @@ async function run() {
     };
     let lintResults = pyLintTool.execSync(pyLintToolOptions);
 
-    if (lintResults.stdout == undefined) {
-        tl.setResult(tl.TaskResult.Succeeded, '');
-    } else {
+    if (lintResults.stdout.match(/\[[A-Z]{1}\d{4}.*\]/g)) {
         console.log(lintResults.stdout);
         tl.setResult(tl.TaskResult.Failed, 'Failed PyLint checks');
+    } else {
+        tl.setResult(tl.TaskResult.Succeeded, 'Successfully completed PyLint checks');
     }
 }
 
