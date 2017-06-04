@@ -60,9 +60,8 @@ async function run() {
     let lintResults = pyLintTool.execSync(pyLintToolOptions);
 
     // Check if the output contains mentions of lint checker warnings
-    if (lintResults.stdout.match(/\[[A-Z]{1}\d{4}.*\]/g)) {
-        console.log(lintResults.stdout);
-        tl.setResult(tl.TaskResult.Failed, 'Failed PyLint checks');
+    if (lintResults.stdout.match(/\[[RCWEF]\d{4}.*\]/g)) {
+        tl.setResult(tl.TaskResult.Failed, lintResults.stdout);
     } else {
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully completed PyLint checks');
     }
