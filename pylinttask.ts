@@ -2,13 +2,24 @@ import tl = require('vsts-task-lib/task')
 import tr = require('vsts-task-lib/toolrunner')
 import path = require('path')
 
-function activateVenv(venvPath: string, isWindows: boolean) {
+/**
+ * Activates the virtual environment created at the provided location
+ * @param venvPath The path to the virtual environment
+ */
+function activateVenv(venvPath: string) {
     tl.debug('Activating virtual environment')
 
-    let venvToolsPath = isWindows ? 'Scripts' : 'bin';
+    let venvToolsPath = isWindows() ? 'Scripts' : 'bin';
 
     process.env['VIRTUAL_ENV'] = venvPath;
     process.env['PATH'] = path.join(venvPath, venvToolsPath) + path.delimiter + process.env['PATH'];
+}
+
+/**
+ * Determines if the current operating system is Windows based
+ */
+function isWindows() {
+    return tl.osType().match(/^Win/) != null;
 }
 
 async function run() {
@@ -20,21 +31,18 @@ async function run() {
     if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
-        // Determine if this is a windows based environment
-        let isWindows = tl.osType().match(/^Win/) != null;
-
         // Define the location of the virtual environment
         let venv = path.join(cwd, 'venv', 'build');
         tl.debug('Virtual environment path set to: ' + venv);
 
         // Create the virtual environment
         tl.debug('Creating virtual environment');
-        let pythonPath = isWindows ? tl.which('python') : tl.which('python3');
+        let pythonPath = isWindows() ? tl.which('python') : tl.which('python3');
         let venvTool = tl.tool(pythonPath).arg(['-m', 'venv', venv]);
         await venvTool.exec();
 
         // Activate the virtual environment
-        activateVenv(venv, isWindows);
+        activateVenv(venv);
     } else {
         tl.debug('Already in a virtual environment');
     }
