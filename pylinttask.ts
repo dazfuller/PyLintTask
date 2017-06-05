@@ -22,7 +22,10 @@ function isWindows() {
     return tl.osType().match(/^Win/) != null;
 }
 
-async function run() {
+/**
+ * Execute PyLint task
+ */
+async function executePyLint() {
     // Get the working directory and move to it
     let cwd = tl.getPathInput('cwd', true, true);
     tl.cd(cwd);
@@ -72,6 +75,17 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, lintResults.stdout);
     } else {
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully completed PyLint checks');
+    }
+}
+
+/**
+ * Task entry point
+ */
+async function run() {
+    try {
+        executePyLint();
+    } catch (e) {
+        tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }
 
