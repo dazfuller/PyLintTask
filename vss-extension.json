@@ -15,7 +15,7 @@
     "description": "Executes PyLint for checking your Python 3 code base for compliance with PEP-8.",
     "content": {
         "details": {
-            "path": "README.md"
+            "path": "overview.md"
         },
 	"license": {
             "path": "LICENSE.md"
