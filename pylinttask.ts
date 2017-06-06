@@ -23,15 +23,18 @@ function isWindows() {
 }
 
 /**
- * Execute PyLint task
+ * Gets a ToolRunner for the Pip tool using the provided arguments
+ * @param args A collection of arguments to provide to the tool
  */
-async function executePyLint() {
-    // Get the working directory and move to it
-    let cwd = tl.getPathInput('cwd', true, true);
-    tl.cd(cwd);
+function getPipTool(args: string[]): tr.ToolRunner {
+    return tl.tool(tl.which('pip')).arg(args);
+}
 
-    // Create the virtual environment and switch into it if not already in one
-    if (process.env['VIRTUAL_ENV'] == undefined) {
+/**
+ * Configures the environment for use
+ */
+async function configureEnvironment() {
+     if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
         var agentBuildDir = tl.getVariable('Agent.BuildDirectory');
@@ -52,10 +55,29 @@ async function executePyLint() {
         tl.debug('Already in a virtual environment');
     }
 
-    // Install PyLint
+    // Get the optional requirements file and restore if available
+    let requirementFile = tl.getPathInput('reqfile', false, true);
+    if (requirementFile != null) {
+        var pipTool = getPipTool(['install', '-r', requirementFile]);
+        await pipTool.exec();
+    }
+
+    // Install PyLint, if this is already covered by the requirements file
+    // then it will not be installed a second time
     tl.debug('Installing PyLint into virtual environment');
-    let pipTool = tl.tool(tl.which('pip')).arg(['install', 'pylint']);
+    pipTool = getPipTool(['install', 'pylint']);
     await pipTool.exec();
+}
+
+/**
+ * Execute PyLint task
+ */
+async function executePyLint() {
+    // Get the working directory and move to it
+    let cwd = tl.getVariable('Build.SourcesDirectory');
+    tl.cd(cwd);
+
+    await configureEnvironment();
 
     // Get the collection of modules to check
     let modules = tl.getDelimitedInput('modules', ' ', true);

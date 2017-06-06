@@ -13,18 +13,18 @@
   "version": {
     "Major": "0",
     "Minor": "2",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "PyLint $(cwd)",
   "inputs": [
     {
-      "name": "cwd",
-      "label": "Working Directory",
+      "name": "reqfile",
+      "label": "Pip requirements file",
       "type": "filePath",
-      "defaultValue": "$(Agent.BuildDirectory)",
-      "required": true,
-      "helpMarkDown": "Set the working directory for where to execute PyLint from"
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Install additional packages from the given requirements file"
     },
     {
       "name": "modules",
