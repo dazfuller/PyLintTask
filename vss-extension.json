@@ -1,0 +1,48 @@
+{
+    "manifestVersion": 1,
+    "id": "pylint-task",
+    "name": "PyLint Checker",
+    "version": "0.0.25",
+    "publisher": "dazfuller",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "images/icon.png"
+    },
+    "description": "Executes PyLint for checking your Python 3 code base for compliance with PEP-8.",
+    "content": {
+        "details": {
+            "path": "README.md"
+        },
+	"license": {
+            "path": "LICENSE.md"
+        }
+    },
+    "categories": [
+        "Build and release"
+    ],
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/dazfuller/PyLintTask"
+    },
+    "files": [
+        {
+            "path": "pylinttask"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "pylint-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "pylinttask"
+            }
+        }
+    ]
+}

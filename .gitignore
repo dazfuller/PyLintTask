@@ -3,3 +3,4 @@ venv/
 .vscode
 *.js
 .taskkey
+*.vsix
