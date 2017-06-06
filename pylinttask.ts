@@ -34,8 +34,10 @@ async function executePyLint() {
     if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
+        var agentBuildDir = tl.getVariable('Agent.BuildDirectory');
+
         // Define the location of the virtual environment
-        let venv = path.join(cwd, 'venv', 'build');
+        let venv = path.join(agentBuildDir, 'venv', 'build');
         tl.debug('Virtual environment path set to: ' + venv);
 
         // Create the virtual environment
