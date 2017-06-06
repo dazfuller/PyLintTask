@@ -13,18 +13,26 @@
   "version": {
     "Major": "0",
     "Minor": "2",
-    "Patch": "0"
+    "Patch": "2"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "PyLint $(cwd)",
   "inputs": [
     {
-      "name": "cwd",
-      "label": "Working Directory",
+      "name": "pythonroot",
+      "label": "Root directory for python code",
       "type": "filePath",
-      "defaultValue": "$(Agent.BuildDirectory)",
-      "required": true,
-      "helpMarkDown": "Set the working directory for where to execute PyLint from"
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Select the location for the python source code, defaults to the root of the source code"
+    },
+    {
+      "name": "reqfile",
+      "label": "Pip requirements file",
+      "type": "filePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Install additional packages from the given requirements file"
     },
     {
       "name": "modules",

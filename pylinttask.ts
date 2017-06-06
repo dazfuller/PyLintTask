@@ -2,6 +2,11 @@ import tl = require('vsts-task-lib/task')
 import tr = require('vsts-task-lib/toolrunner')
 import path = require('path')
 
+let agentBuildDir = tl.getVariable('Agent.BuildDirectory');
+let rootDir = tl.getPathInput('pythonroot', false, true);
+let requirementFile = tl.getPathInput('reqfile', false, true);
+let modules = tl.getDelimitedInput('modules', ' ', true);
+
 /**
  * Activates the virtual environment created at the provided location
  * @param venvPath The path to the virtual environment
@@ -23,19 +28,22 @@ function isWindows() {
 }
 
 /**
- * Execute PyLint task
+ * Gets a ToolRunner for the Pip tool using the provided arguments
+ * @param args A collection of arguments to provide to the tool
  */
-async function executePyLint() {
-    // Get the working directory and move to it
-    let cwd = tl.getPathInput('cwd', true, true);
-    tl.cd(cwd);
+function getPipTool(args: string[]): tr.ToolRunner {
+    return tl.tool(tl.which('pip')).arg(args);
+}
 
-    // Create the virtual environment and switch into it if not already in one
-    if (process.env['VIRTUAL_ENV'] == undefined) {
+/**
+ * Configures the environment for use
+ */
+async function configureEnvironment() {
+     if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
         // Define the location of the virtual environment
-        let venv = path.join(cwd, 'venv', 'build');
+        let venv = path.join(agentBuildDir, 'venv', 'build');
         tl.debug('Virtual environment path set to: ' + venv);
 
         // Create the virtual environment
@@ -50,18 +58,34 @@ async function executePyLint() {
         tl.debug('Already in a virtual environment');
     }
 
-    // Install PyLint
+    // Get the optional requirements file and restore if available
+    if (requirementFile != null) {
+        var pipTool = getPipTool(['install', '-r', requirementFile]);
+        await pipTool.exec();
+    }
+
+    // Install PyLint, if this is already covered by the requirements file
+    // then it will not be installed a second time
     tl.debug('Installing PyLint into virtual environment');
-    let pipTool = tl.tool(tl.which('pip')).arg(['install', 'pylint']);
+    pipTool = getPipTool(['install', 'pylint']);
     await pipTool.exec();
+}
+
+/**
+ * Execute PyLint task
+ */
+async function executePyLint() {
+    // Get the working directory and move to it
+    tl.cd(rootDir);
+
+    await configureEnvironment();
 
     // Get the collection of modules to check
-    let modules = tl.getDelimitedInput('modules', ' ', true);
     let lintArgs = ['-f', 'msvs'].concat(modules)
 
     // Execute PyLint
     tl.debug('Executing PyLint against modules: ' + modules);
-    console.log('Executing PyLint against: ' + cwd);
+    console.log('Executing PyLint against: ' + rootDir);
 
     let pyLintTool = tl.tool(tl.which('pylint')).arg(lintArgs);
     let pyLintToolOptions: tr.IExecSyncOptions = <any> {
