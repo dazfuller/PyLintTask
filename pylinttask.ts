@@ -2,6 +2,11 @@ import tl = require('vsts-task-lib/task')
 import tr = require('vsts-task-lib/toolrunner')
 import path = require('path')
 
+let agentBuildDir = tl.getVariable('Agent.BuildDirectory');
+let rootDir = tl.getPathInput('pythonroot', false, true);
+let requirementFile = tl.getPathInput('reqfile', false, true);
+let modules = tl.getDelimitedInput('modules', ' ', true);
+
 /**
  * Activates the virtual environment created at the provided location
  * @param venvPath The path to the virtual environment
@@ -37,8 +42,6 @@ async function configureEnvironment() {
      if (process.env['VIRTUAL_ENV'] == undefined) {
         tl.debug('Not currently in a virtual environment');
 
-        var agentBuildDir = tl.getVariable('Agent.BuildDirectory');
-
         // Define the location of the virtual environment
         let venv = path.join(agentBuildDir, 'venv', 'build');
         tl.debug('Virtual environment path set to: ' + venv);
@@ -56,7 +59,6 @@ async function configureEnvironment() {
     }
 
     // Get the optional requirements file and restore if available
-    let requirementFile = tl.getPathInput('reqfile', false, true);
     if (requirementFile != null) {
         var pipTool = getPipTool(['install', '-r', requirementFile]);
         await pipTool.exec();
@@ -74,18 +76,16 @@ async function configureEnvironment() {
  */
 async function executePyLint() {
     // Get the working directory and move to it
-    let cwd = tl.getVariable('Build.SourcesDirectory');
-    tl.cd(cwd);
+    tl.cd(rootDir);
 
     await configureEnvironment();
 
     // Get the collection of modules to check
-    let modules = tl.getDelimitedInput('modules', ' ', true);
     let lintArgs = ['-f', 'msvs'].concat(modules)
 
     // Execute PyLint
     tl.debug('Executing PyLint against modules: ' + modules);
-    console.log('Executing PyLint against: ' + cwd);
+    console.log('Executing PyLint against: ' + rootDir);
 
     let pyLintTool = tl.tool(tl.which('pylint')).arg(lintArgs);
     let pyLintToolOptions: tr.IExecSyncOptions = <any> {
