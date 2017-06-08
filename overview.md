@@ -1,4 +1,4 @@
-# PyLint Build Task
+# PyLint Build Task
 
 A task to run PyLint against a [Python](https://python.org) 3 code base, the equivalent of running:
 
@@ -14,7 +14,7 @@ The task takes 4 parameters, the main ones being:
 
 The task does not create any HTML output but will return the results of a failed check from the task so that they can be inspected in the build information.
 
-## Releases
+## Releases
 
 Version | Description
 ------- | -----------
