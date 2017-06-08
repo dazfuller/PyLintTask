@@ -2,5 +2,6 @@ node_modules/
 venv/
 .vscode
 *.js
+*.js.map
 .taskkey
 *.vsix
