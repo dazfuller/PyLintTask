@@ -24,7 +24,7 @@ function activateVenv(venvPath: string) {
  * Determines if the current operating system is Windows based
  */
 function isWindows() {
-    return tl.osType().match(/^Win/) != null;
+    return tl.osType().match(/^Win/) !== null;
 }
 
 /**
@@ -39,7 +39,7 @@ function getPipTool(args: string[]): tr.ToolRunner {
  * Configures the environment for use
  */
 async function configureEnvironment() {
-     if (process.env['VIRTUAL_ENV'] == undefined) {
+     if (process.env['VIRTUAL_ENV'] === undefined) {
         tl.debug('Not currently in a virtual environment');
 
         // Define the location of the virtual environment
@@ -59,7 +59,7 @@ async function configureEnvironment() {
     }
 
     // Get the optional requirements file and restore if available
-    if (requirementFile != null) {
+    if (requirementFile !== null) {
         var pipTool = getPipTool(['install', '-r', requirementFile]);
         await pipTool.exec();
     }
