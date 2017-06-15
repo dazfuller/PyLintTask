@@ -14,6 +14,14 @@ The task takes 4 parameters, the main ones being:
 
 The task does not create any HTML output but will return the results of a failed check from the task so that they can be inspected in the build information.
 
+## Requirements
+
+Python 3 must be installed and be available in the PATH.
+
+Whilst not tested specifically against Linux build agents, if you would like to try then you might also need to install the package appropriate for your distribution to make the venv module available.
+
+If using the hosted build agents then you will need to check that you are using one which has Python 3 available (Hosted VS2017 for instance).
+
 ## Releases
 
 Version | Description
