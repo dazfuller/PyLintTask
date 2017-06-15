@@ -6,7 +6,6 @@ This is a first attempt for me to create a VSTS build task and is in early stage
 
 1. Initial version to simply create a virtual environment and execute PyLint [*Done*]
 1. Initialization of virtual environment based on pip freeze file, installing PyLint if not already available [*Done*]
-1. Exposure of PyLint command line options
-1. Ability to specify more than just modules
+1. Look at supporting alternative virtual environment modules (e.g. virtualenv, conda)
 
 And also at some point during the development ensuring that the task is available cross-platform, currently it will only work on Windows based build agents as hosted Linux agents require installation of additional packages (python-venv).
