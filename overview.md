@@ -26,4 +26,4 @@ If using the hosted build agents then you will need to check that you are using 
 
 Version | Description
 ------- | -----------
-1.0.x   | Initial release targetting the execution of PyLint on Windows build agents
+0.1.x   | Initial release targetting the execution of PyLint on Windows build agents
